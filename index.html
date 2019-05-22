@@ -20,7 +20,7 @@
                 <button id="Add" v-on:click="addTodo" class="btn btn-success mt-2">Add</button>
 
                 <hr>
-                <ul id="sortable" v-for="(item,index) in items" class="list-unstyled list-group list-group-flush item-{{$index}}" >
+                <ul id="sortable" v-for="(item,index) in items" class="list-unstyled list-group list-group-flush">
                   <li class="list-group-item ui-state-default ">
                     <div class="checkbox">
                       <div class="row">
@@ -28,10 +28,10 @@
                           {{ item.todo }}
                         </div>
                         <div class="col-md-2">
-                           <button style="margin-left:75%" type="button" class="btn btn-sm btn-info" id="done{{index}}" name="button">Done</button>
+                          <button style="margin-left:75%" v-on:click="doneTodo(index)" type="button" class="btn btn-sm btn-info" id="done" name="button">Done</button>
                         </div>
                         <div class="col-md-2">
-                           <button style="margin-left:75%" type="button" class="btn btn-sm btn-danger" name="button">Delete</button>
+                          <button style="margin-left:75%" v-on:click="deleteTodo(index)" type="button" class="btn btn-sm btn-danger" name="button">Delete</button>
                         </div>
                       </div>
                     </div>
@@ -51,23 +51,30 @@
             <div class="card-body">
               <div class="todolist">
                 <h1>Already Done</h1>
-                <ul id="done-items" class="list-unstyled">
-                  <li>Some item
-                    <button style="margin-left:70%" class="remove-item btn btn-default btn-xs pull-right">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </li>
-                  <li>Some item
-                    <button style="margin-left:70%" class="remove-item btn btn-default btn-xs pull-right">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </li>
-                  <li>Some item
-                    <button style="margin-left:70%" class="remove-item btn btn-default btn-xs pull-right">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </li>
+                <ul id="done-items" v-for="(item,index) in done" class="list-unstyled">
+                  <li>
+                    <div class="row">
+                      <div class="col md-6">
+                        {{ item.todo }}
+                      </div>
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-md-1">
+                            <button style="margin-left:40%" v-on:click="moveToTodo(index)" class="remove-item btn btn-default btn-xs pull-right">
+                              <i class="fas fa-step-backward"></i>
+                            </button>
+                          </div>
 
+                          <div class="col-md-1">
+                            <button class="remove-item btn btn-default btn-xs pull-right" v-on:click="deleteTodoDone(index)">
+                              <i class="fas fa-times"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </li>
                 </ul>
               </div>
             </div>
@@ -82,20 +89,35 @@
   <script type="text/javascript">
     new Vue({
       el: '#app',
-      mounted(){
-        console.log('wow')
-      },
-      data:{
-        items:[
-          { todo: 'item1' },
-          { todo: 'item2' },
+      data: {
+        items: [
+          {
+            todo: 'item1'
+          }, {
+            todo: 'item2'
+          }
         ],
-        todoInput:"",
+        done: [],
+        todoInput: ""
       },
-      methods:{
-        addTodo:function (item){
-          this.items.push({todo:this.todoInput});
+      methods: {
+        addTodo: function (item) {
+          this.items.push({todo: this.todoInput});
           this.todoInput = "";
+        },
+        doneTodo: function (item) {
+          this.done.push(this.items[item]);
+          this.items.splice(item, 1)
+        },
+        deleteTodo: function (item) {
+          this.items.splice(item, 1)
+        },
+        moveToTodo: function (item) {
+          this.items.push(this.done[item]);
+          this.done.splice(item, 1)
+        },
+        deleteTodoDone: function (item) {
+          this.done.splice(item, 1)
         }
       }
 

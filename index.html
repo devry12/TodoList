@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
   </head>
   <body >
     <div class="container" id="app">
@@ -107,8 +108,17 @@
       },
       methods: {
         addTodo: function (item) {
-          this.items.push({todo: this.todoInput});
-          this.todoInput = "";
+          if (this.todoInput != "") {
+            this.items.push({todo: this.todoInput});
+            this.todoInput = "";
+            const Toast = Swal.mixin({toast: true, position: 'top-end', showConfirmButton: false, timer: 3000});
+
+            Toast.fire({type: 'success', title: 'Todo berhasil di tambahkan'})
+          } else {
+            const Toast = Swal.mixin({toast: true, position: 'top-end', showConfirmButton: false, timer: 3000});
+
+            Toast.fire({type: 'error', title: 'Maaf todo tidak boleh kosong'})
+          }
         },
         doneTodo: function (item) {
           this.done.push(this.items[item]);
